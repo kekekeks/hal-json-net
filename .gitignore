@@ -1,0 +1,7 @@
+*/bin
+*/obj
+*.suo
+*.DotSettings.user
+*.user
+packages/*
+!packages/repositories.config
