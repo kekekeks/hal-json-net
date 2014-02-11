@@ -20,7 +20,7 @@ public class Model
 Configuration:
 
 ```csharp
-var config = HalJsonConfiguration();
+var config = HalJsonConfiguration("http://example.com/api"); //You can use null instead of example.com, it won't touch your links in that case
 config.Configure<Model>()
 				.Embed(p => p.ItemIds)
 				.Link("self", x => "/model/" + x.Id)
@@ -36,11 +36,11 @@ Results:
 {
   "_links": {
     "all": {
-      "href": "/model",
+      "href": "http://example.com/api/model",
       "templated": "false"
     },
     "self": {
-      "href": "/model/42",
+      "href": "http://example.com/api/model/42",
       "templated": "false"
     }
   },
@@ -57,3 +57,12 @@ Results:
 
 
 ```
+
+# Differencies from other implementations 
+
+#### https://github.com/MLaritz/HalJsonConverter
+
+
+- You don't have to hardcode HAL information inside the model (it's impossible to configure base url in MLaritz's implementation)
+- It doesn't duplicate Json.Net serialization infrastructure, just changes it's configuration, you won't loss your serialization settings configured by Json.Net built-in attribute system (i.e. JsonProperty, JsonIgnore, before/after serialization callbacks, etc)
+
