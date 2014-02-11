@@ -22,13 +22,14 @@ namespace Tests
 			public List<int> Ids { get; set; }
 		}
 
-		HalJsonConfiguration Configure()
+		HalJsonConfiguration Configure(string baseUrl = null)
 	    {
-			var config = new HalJsonConfiguration ();
-			config.Configure<Model>()
-				.Embed(p => p.Ids)
-				.Link("self", x => "/model/" + x.Id)
-				.Link("all", "/model");
+			var config = new HalJsonConfiguration (baseUrl);
+		    config.Configure<Model>()
+		        .Embed(p => p.Ids)
+		        .Link("self", x => "/model/" + x.Id)
+		        .Link("all", "/model")
+		        .Link("external", "http://example.com/example");
 			
 		    return config;
 	    }
@@ -49,6 +50,14 @@ namespace Tests
 		    Assert.Equal("/model/42", res["_links"]["self"]["href"].Value<string>());
 			Assert.Equal ("/model", res["_links"]["self"]["all"].Value<string> ());
 	    }
+
+        [Fact]
+        public void ShouldRespectBaseUrl()
+        {
+            var res = SerializeAsJson(Configure("/prefix"), new Model());
+            Assert.Equal("http://example.com/example", res["_links"]["external"]["href"]);
+            Assert.Equal ("/prefix/model", res["_links"]["all"]["href"]);
+        }
 
 
 		string Serialize (HalJsonConfiguration config, object obj)

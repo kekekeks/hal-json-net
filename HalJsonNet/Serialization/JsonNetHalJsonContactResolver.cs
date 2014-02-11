@@ -56,7 +56,7 @@ namespace HalJsonNet.Serialization
 					DeclaringType = type,
 					Writable = false,
 					Readable = true,
-					ValueProvider = new LinksValueProvider(config.Links),
+					ValueProvider = new LinksValueProvider(config.Links, _configuration),
 					PropertyName = "_links"
 				});
 
@@ -69,23 +69,34 @@ namespace HalJsonNet.Serialization
 		private class LinksValueProvider : IValueProvider
 		{
 			private readonly IReadOnlyDictionary<string, Link> _links;
+		    private readonly HalJsonConfiguration _configuration;
 
-			public LinksValueProvider(IReadOnlyDictionary<string, Link> links)
+		    public LinksValueProvider(IReadOnlyDictionary<string, Link> links, HalJsonConfiguration configuration)
 			{
-				_links = links;
+			    _links = links;
+			    _configuration = configuration;
 			}
 
-			public void SetValue(object target, object value)
+		    public void SetValue(object target, object value)
 			{
 				throw new NotSupportedException();
 			}
 
+		    string GetHRef(string link)
+		    {
+		        var relative = link.IndexOf("://", 0, Math.Min(8, link.Length), StringComparison.Ordinal) == -1;
+		        if (!relative)
+		            return link;
+		        if (link.StartsWith("/"))
+		            return _configuration.UrlBase + link;
+		        return _configuration.UrlBase + "/" + link;
+		    }
 
 			public object GetValue(object target)
 			{
 				return _links.ToDictionary(x => x.Key, x => (object) new JObject
 				{
-					{"href", x.Value.GetHref(target)},
+					{"href", GetHRef(x.Value.GetHref(target))},
 					{"templated", x.Value.Templated}
 				});
 			}

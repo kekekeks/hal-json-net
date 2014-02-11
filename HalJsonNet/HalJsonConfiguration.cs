@@ -12,6 +12,15 @@ namespace HalJsonNet
 	{
 		private readonly ThreadSafeCache<Type, HalJsonTypeConfiguration> _config = new ThreadSafeCache<Type, HalJsonTypeConfiguration>();
 
+	    public HalJsonConfiguration(string urlBase = null)
+	    {
+	        UrlBase = urlBase;
+	    }
+
+	    public string UrlBase { get; private set; }
+
+        
+
 		public bool TryGetTypeConfiguration(Type type, out HalJsonTypeConfiguration config)
 		{
 			return _config.TryGet(type, out config);
