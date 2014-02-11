@@ -84,6 +84,8 @@ namespace HalJsonNet.Serialization
 
 		    string GetHRef(string link)
 		    {
+		        if (_configuration.UrlBase == null)
+		            return link;
 		        var relative = link.IndexOf("://", 0, Math.Min(8, link.Length), StringComparison.Ordinal) == -1;
 		        if (!relative)
 		            return link;
