@@ -86,7 +86,7 @@ namespace HalJsonNet.Serialization
 				return _links.ToDictionary(x => x.Key, x => (object) new JObject
 				{
 					{"href", x.Value.GetHref(target)},
-					{"templated", x.Value.Templated.ToString().ToLower()}
+					{"templated", x.Value.Templated}
 				});
 			}
 		}
