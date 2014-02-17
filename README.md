@@ -58,6 +58,26 @@ Results:
 
 ```
 
+You may as well use IHaveHalJsonLinks and IHaveHalJsonEmbedded:
+
+```csharp
+
+public class AdvancedModel: IHaveHalJsonLinks, IHaveHalJsonEmbedded
+{
+    public IDictionary<string, Link> GetLinks()
+    {
+        return new Dictionary<string, Link> {{"self", "/something"}};
+	}
+
+    public IDictionary<string, Embedded> GetEmbedded()
+    {
+	    return new Dictionary<string, Embedded> {{"ids", new Embedded(new[] {1, 2, 3})}};
+    }
+}
+
+```
+
+
 # Differencies from other implementations 
 
 #### https://github.com/MLaritz/HalJsonConverter
