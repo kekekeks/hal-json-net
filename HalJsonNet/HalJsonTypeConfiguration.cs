@@ -16,13 +16,13 @@ namespace HalJsonNet
 
 		private ImmutableDictionary<string, Embedded> _embedded =
 			ImmutableDictionary<string, Embedded>.Empty;
-		private readonly object _syncRoot = new object();
+		private object _syncRoot = new object();
 
 		public IReadOnlyDictionary<string, Link> Links { get { return _links; } }
 		public IEnumerable<PropertyInfo> HiddenProperties { get { return _hiddenProperties; } }
 		public IReadOnlyDictionary<string, Embedded> Embedded { get { return _embedded; } }
 
-		protected void HideProperty(PropertyInfo nfo)
+		internal void HideProperty(PropertyInfo nfo)
 		{
 			lock (_syncRoot)
 				_hiddenProperties = _hiddenProperties.Add(nfo);
@@ -39,12 +39,23 @@ namespace HalJsonNet
 			return Link (name, new Link (_ => link, templated));
 		}
 
-		protected TC Embed(string name, Func<object, object> getter)
+		internal TC Embed(string name, Func<object, object> getter)
 		{
 			lock (_syncRoot)
 				_embedded = _embedded.SetItem(name, new Embedded(getter));
 			return this;
 		}
+
+	    public HalJsonTypeConfiguration Clone()
+	    {
+	        lock (_syncRoot)
+	        {
+	            var rv = (HalJsonTypeConfiguration) MemberwiseClone();
+	            rv._syncRoot = new object();
+	            return rv;
+	        }
+	    }
+
 	}
 
 	public sealed class HalJsonTypeConfiguration<T> : HalJsonTypeConfiguration
@@ -89,5 +100,6 @@ namespace HalJsonNet
 			HideProperty(p);
 			return Embed(p.Name.ToCamelCase(), getter);
 		}
+
 	}
 }

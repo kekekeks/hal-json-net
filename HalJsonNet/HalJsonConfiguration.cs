@@ -23,13 +23,19 @@ namespace HalJsonNet
 
 		public bool TryGetTypeConfiguration(Type type, out HalJsonTypeConfiguration config)
 		{
-			return _config.TryGet(type, out config);
+			var rv = _config.TryGet(type, out config);
+		    if (!rv && AttributeConfigurationResolver.GetConfigurationOrNull(type) != null) // No configuration in cache, but found attribute-based one
+		    {
+		        config = GetOrCreateTypeConfiguration(type);
+		        return true;
+		    }
+		    return rv;
 		}
 
 		public HalJsonTypeConfiguration GetOrCreateTypeConfiguration(Type type)
 		{
 			return _config.GetOrAdd(type,
-				t => (HalJsonTypeConfiguration) Activator.CreateInstance(typeof (HalJsonTypeConfiguration<>).MakeGenericType(t)));
+				t => AttributeConfigurationResolver.GetConfigurationOrNull(type) ?? (HalJsonTypeConfiguration) Activator.CreateInstance(typeof (HalJsonTypeConfiguration<>).MakeGenericType(t)));
 		}
 
 		public HalJsonTypeConfiguration<T> Configure<T>()

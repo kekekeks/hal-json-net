@@ -82,6 +82,27 @@ namespace Tests
             Assert.Equal(3, ((JArray) res["_embedded"]["ids"])[2].Value<int>());
         }
 
+        [HalJsonLink("something", "123")]
+        public class AttributeBasedModel
+        {
+            [HalJsonLink("self", "/mdl/{0}")]
+            public int Id { get; set; }
+
+            [HalJsonEmbedded("ids")]
+            public List<int> Ids { get; set; }
+        }
+
+
+        [Fact]
+        public void ShouldRespectAttributeBasedConfiguration()
+        {
+            var model = new AttributeBasedModel {Id = 2, Ids = new List<int> {1, 2, 3}};
+            var res = SerializeAsJson (Configure (), model);
+            Assert.Equal ("/mdl/2", res["_links"]["self"]["href"]);
+            Assert.Equal ("123", res["_links"]["something"]["href"]);
+            Assert.Equal (3, ((JArray)res["_embedded"]["ids"])[2].Value<int> ());
+
+        }
 
         string Serialize (HalJsonConfiguration config, object obj)
 		{
