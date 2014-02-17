@@ -48,7 +48,7 @@ namespace Tests
 		    var model = new Model {Id = 42, Name = "One", Ids = new List<int> {1, 2, 3}};
 			var res = SerializeAsJson (Configure (), model);
 		    Assert.Equal("/model/42", res["_links"]["self"]["href"].Value<string>());
-			Assert.Equal ("/model", res["_links"]["self"]["all"].Value<string> ());
+			Assert.Equal ("/model", res["_links"]["all"]["href"].Value<string> ());
 	    }
 
         [Fact]
