@@ -21,10 +21,13 @@ namespace HalJsonNet.Serialization
 		protected override IList<JsonProperty> CreateProperties(Type type, MemberSerialization memberSerialization)
 		{
 			HalJsonTypeConfiguration config;
-			if (!_configuration.TryGetTypeConfiguration(type, out config))
-				return base.CreateProperties(type, memberSerialization);
-				
-			var ignored = config.HiddenProperties;
+		    if (!_configuration.TryGetTypeConfiguration(type, out config))
+		    {
+                if(!(typeof(IHaveHalJsonLinks).IsAssignableFrom(type) || typeof(IHaveHalJsonEmbedded).IsAssignableFrom(type)))
+		            return base.CreateProperties(type, memberSerialization);
+		        config = new HalJsonTypeConfiguration();
+		    }
+		    var ignored = config.HiddenProperties;
 
 			var lst = new List<JsonProperty>();
 			foreach (var member in GetSerializableMembers(type))
@@ -35,7 +38,10 @@ namespace HalJsonNet.Serialization
 				lst.Add(prop);
 			}
 			lst = lst.OrderBy(p => p.Order ?? -1).ToList();
-			if (config.Embedded.Count != 0)
+
+
+            
+			if (config.Embedded.Count != 0 || typeof(IHaveHalJsonEmbedded).IsAssignableFrom(type))
 			{
 				var property = new JsonProperty
 				{
@@ -48,7 +54,7 @@ namespace HalJsonNet.Serialization
 				};
 				lst.Insert(0, property);
 			}
-			if (config.Links.Count != 0)
+			if (config.Links.Count != 0 || typeof(IHaveHalJsonLinks).IsAssignableFrom(type))
 			{
 				lst.Insert(0, new JsonProperty
 				{
@@ -96,7 +102,12 @@ namespace HalJsonNet.Serialization
 
 			public object GetValue(object target)
 			{
-				return _links.ToDictionary(x => x.Key, x => (object) new JObject
+			    var links = _links.AsEnumerable();
+			    var haveLinks = target as IHaveHalJsonLinks;
+			    if (haveLinks != null)
+			        links = links.Concat(haveLinks.GetLinks());
+
+				return links.ToDictionary(x => x.Key, x => (object) new JObject
 				{
 					{"href", GetHRef(x.Value.GetHref(target))},
 					{"templated", x.Value.Templated}
@@ -120,7 +131,11 @@ namespace HalJsonNet.Serialization
 
 			public object GetValue(object target)
 			{
-				return _embed.ToDictionary(x => x.Key, x => x.Value.Getter(target));
+			    var embed = _embed.AsEnumerable();
+			    var haveEmbed = target as IHaveHalJsonEmbedded;
+			    if (haveEmbed != null)
+			        embed = embed.Concat(haveEmbed.GetEmbedded());
+				return embed.ToDictionary(x => x.Key, x => x.Value.Getter(target));
 			}
 		}
 

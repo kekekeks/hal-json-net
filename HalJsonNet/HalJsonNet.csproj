@@ -45,6 +45,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="IHaveHalJsonEmbedded.cs" />
+    <Compile Include="IHaveHalJsonLinks.cs" />
     <Compile Include="Serialization\JsonNetHalJsonContactResolver.cs" />
     <Compile Include="Embedded.cs" />
     <Compile Include="Extensions.cs" />

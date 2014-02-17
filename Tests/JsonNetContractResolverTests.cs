@@ -60,7 +60,30 @@ namespace Tests
         }
 
 
-		string Serialize (HalJsonConfiguration config, object obj)
+        public class AdvancedModel: IHaveHalJsonLinks, IHaveHalJsonEmbedded
+        {
+            public IDictionary<string, Link> GetLinks()
+            {
+                return new Dictionary<string, Link> {{"self", "/something"}};
+            }
+
+            public IDictionary<string, Embedded> GetEmbedded()
+            {
+                return new Dictionary<string, Embedded> {{"ids", new Embedded(new[] {1, 2, 3})}};
+            }
+        }
+
+        [Fact]
+        public void ShouldRespectModelInterfaces()
+        {
+            var model = new AdvancedModel();
+            var res = SerializeAsJson(Configure(), model);
+            Assert.Equal("/something", res["_links"]["self"]["href"]);
+            Assert.Equal(3, ((JArray) res["_embedded"]["ids"])[2].Value<int>());
+        }
+
+
+        string Serialize (HalJsonConfiguration config, object obj)
 		{
 			var tw = new StringWriter ();
 			new JsonSerializer { ContractResolver = new JsonNetHalJsonContactResolver (config) }.Serialize (tw, obj);

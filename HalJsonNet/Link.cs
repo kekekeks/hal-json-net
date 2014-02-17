@@ -17,7 +17,17 @@ namespace HalJsonNet
 			_linkGetter = linkGetter;
 		}
 
-		public string GetHref(object target)
+	    public Link(string link, bool templated = false) : this(x => link, templated)
+	    {
+
+	    }
+
+	    public static implicit operator Link(string link)
+	    {
+	        return new Link(link);
+	    }
+
+	    public string GetHref(object target)
 		{
 			return _linkGetter(target);
 		}

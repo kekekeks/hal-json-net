@@ -14,6 +14,11 @@ namespace HalJsonNet
 			Getter = getter;
 		}
 
-		public Func<object, object> Getter { get; private set; }
+	    public Embedded(object data) : this(_ => data)
+	    {
+
+	    }
+
+	    public Func<object, object> Getter { get; private set; }
 	}
 }
