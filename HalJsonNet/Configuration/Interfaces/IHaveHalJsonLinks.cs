@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace HalJsonNet
+namespace HalJsonNet.Configuration.Interfaces
 {
     public interface IHaveHalJsonLinks
     {

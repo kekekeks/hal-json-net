@@ -4,10 +4,8 @@ using System.Collections.Immutable;
 using System.Linq.Expressions;
 using System.Reflection;
 using HalJsonNet.Utility;
-using TC = HalJsonNet.HalJsonTypeConfiguration;
 
-
-namespace HalJsonNet
+namespace HalJsonNet.Configuration
 {
 	public class HalJsonTypeConfiguration
 	{
@@ -27,19 +25,19 @@ namespace HalJsonNet
 			lock (_syncRoot)
 				_hiddenProperties = _hiddenProperties.Add(nfo);
 		}
-		public TC Link (string name, Link link)
+		public HalJsonTypeConfiguration Link (string name, Link link)
 		{
 			lock (_syncRoot)
 				_links = _links.SetItem (name, link);
 			return this;
 		}
 
-		public TC Link (string name, string link, bool templated = false)
+		public HalJsonTypeConfiguration Link (string name, string link, bool templated = false)
 		{
 			return Link (name, new Link (_ => link, templated));
 		}
 
-		internal TC Embed(string name, Func<object, object> getter)
+		internal HalJsonTypeConfiguration Embed(string name, Func<object, object> getter)
 		{
 			lock (_syncRoot)
 				_embedded = _embedded.SetItem(name, new Embedded(getter));

@@ -45,16 +45,17 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AttributeConfigurationResolver.cs" />
-    <Compile Include="Attributes.cs" />
-    <Compile Include="IHaveHalJsonEmbedded.cs" />
-    <Compile Include="IHaveHalJsonLinks.cs" />
+    <Compile Include="Configuration\AttributeConfigurationResolver.cs" />
+    <Compile Include="Configuration\Attributes\HalJsonLinkAttribute.cs" />
+    <Compile Include="Configuration\Attributes\HalJsonEmbeddedAttribute.cs" />
+    <Compile Include="Configuration\Interfaces\IHaveHalJsonEmbedded.cs" />
+    <Compile Include="Configuration\Interfaces\IHaveHalJsonLinks.cs" />
     <Compile Include="Serialization\JsonNetHalJsonContactResolver.cs" />
-    <Compile Include="Embedded.cs" />
+    <Compile Include="Configuration\Embedded.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="HalJsonConfiguration.cs" />
-    <Compile Include="HalJsonTypeConfiguration.cs" />
-    <Compile Include="Link.cs" />
+    <Compile Include="Configuration\HalJsonTypeConfiguration.cs" />
+    <Compile Include="Configuration\Link.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Utility\ReflectionUtility.cs" />
     <Compile Include="Utility\ThreadSafeCache.cs" />
