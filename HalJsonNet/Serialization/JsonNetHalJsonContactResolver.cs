@@ -29,13 +29,12 @@ namespace HalJsonNet.Serialization
 		            return base.CreateProperties(type, memberSerialization);
 		        config = new HalJsonTypeConfiguration();
 		    }
-		    var ignored = config.HiddenProperties;
 
 			var lst = new List<JsonProperty>();
 			foreach (var member in GetSerializableMembers(type))
 			{
 				var prop = CreateProperty(member, memberSerialization);
-				if (ignored.Contains(member))
+				if (config.HiddenProperties.Contains(member))
 					prop.Readable = false;
 				lst.Add(prop);
 			}
