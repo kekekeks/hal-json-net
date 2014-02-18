@@ -77,12 +77,30 @@ public class AdvancedModel: IHaveHalJsonLinks, IHaveHalJsonEmbedded
 
 ```
 
+Or attributes:
 
-# Differencies from other implementations 
+```csharp
 
-#### https://github.com/MLaritz/HalJsonConverter
+[HalJsonLink("something", "123")]
+public class AttributeBasedModel
+{
+    [HalJsonLink("self", "/mdl/{0}")]
+    public int Id { get; set; }
+
+    [HalJsonEmbedded("ids")]
+    public List<int> Ids { get; set; }
+}
+
+```
+
+Or even mix them together.
+
+
+# Differencies from other JSON.NET libraries
+
+###### https://github.com/MLaritz/HalJsonConverter
 
 
 - You don't have to hardcode HAL information inside the model (it's impossible to configure base url in MLaritz's implementation)
-- It doesn't duplicate Json.Net serialization infrastructure, just changes it's configuration, you won't loss your serialization settings configured by Json.Net built-in attribute system (i.e. JsonProperty, JsonIgnore, before/after serialization callbacks, etc)
+- My implementation doesn't duplicate Json.Net serialization infrastructure, just changes it's configuration, you won't loss your serialization settings configured by Json.Net built-in attribute system (i.e. JsonProperty, JsonIgnore, before/after serialization callbacks, etc)
 
