@@ -5,3 +5,4 @@
 *.user
 packages/*
 !packages/repositories.config
+HalJsonNet/*.nupkg
