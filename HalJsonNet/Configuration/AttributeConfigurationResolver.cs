@@ -36,8 +36,7 @@ namespace HalJsonNet.Configuration
                     if (embedded.HideProperty)
                         rv.HideProperty(prop);
                 }
-                var link = prop.GetCustomAttributes().OfType<HalJsonLinkAttribute>().FirstOrDefault();
-                if (link != null)
+                foreach (var link in prop.GetCustomAttributes().OfType<HalJsonLinkAttribute>())
                 {
                     found = true;
                     rv.Link(link.Name, new Link(LinkGetter(CreateGetter(t, prop), link.Link), link.Templated));

@@ -2,7 +2,7 @@
 
 namespace HalJsonNet.Configuration.Attributes
 {
-    [AttributeUsage(AttributeTargets.Property | AttributeTargets.Class)]
+    [AttributeUsage(AttributeTargets.Property | AttributeTargets.Class, AllowMultiple = true)]
     public class HalJsonLinkAttribute : Attribute
     {
         public string Name { get; private set; }
