@@ -2,14 +2,14 @@
 <package>
   <metadata>
     <id>HalJsonNet</id>
-    <version>0.1.0</version>
+    <version>0.1.1</version>
     <title>HalJsonNet</title>
     <authors>Nikita Tsukanov &lt;nikita.d.tsukanov@gmail.com&gt;</authors>
     <owners>Nikita Tsukanov &lt;nikita.d.tsukanov@gmail.com&gt;</owners>
     <projectUrl>https://github.com/kekekeks/hal-json-net/</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>Package contains contract resolver for JSON.NET and some tools for configuring your models for serialization. You can read about HAL JSON here: http://stateless.co/hal_specification.html</description>
-    <releaseNotes>Initial packaging.</releaseNotes>
+    <releaseNotes>Now HalJsonLinkAttribute can be applied multiple times</releaseNotes>
     <copyright>Copyright 2014</copyright>
     <tags>HAL JSON JSON.NET HAL-JSON JSON-HAL</tags>
   </metadata>
