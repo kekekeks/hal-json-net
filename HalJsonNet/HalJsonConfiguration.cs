@@ -11,7 +11,10 @@ namespace HalJsonNet
 	    public HalJsonConfiguration(string urlBase = null)
 	    {
 	        UrlBase = urlBase;
+	        HalJsonPropertiesOrder = -2;
 	    }
+
+        public int HalJsonPropertiesOrder { get; set; }
 
 	    public string UrlBase { get; private set; }
 

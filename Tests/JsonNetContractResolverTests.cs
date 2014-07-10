@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using HalJsonNet;
 using HalJsonNet.Configuration;
 using HalJsonNet.Configuration.Attributes;
@@ -106,6 +107,34 @@ namespace Tests
 
         }
 
+        [HalJsonLink("smth","smth")]
+        public class OrderedModel
+        {
+            [HalJsonEmbedded("foo")]
+            public int Foo { get; set; }
+
+            [JsonProperty(Order = 2)]
+            public int P1 { get; set; }
+            [JsonProperty(Order = -3)]
+            public int P2 { get; set; }
+            public int P3 { get; set; }
+        }
+
+        [Fact]
+        public void OrderingWorksAsIntended()
+        {
+            var mdl = new OrderedModel();
+            var res = SerializeAsJson(Configure(), mdl);
+            Assert.Equal(new[] { "p2", "_links", "_embedded", "p3", "p1" }, res.Properties().Select(x => x.Name));
+
+            var cfg2 = Configure();
+            cfg2.HalJsonPropertiesOrder = 5;
+            res = SerializeAsJson(cfg2, mdl);
+            Assert.Equal(new[] { "p2", "p3", "p1", "_links", "_embedded" }, res.Properties().Select(x => x.Name));
+
+        }
+
+
         string Serialize (HalJsonConfiguration config, object obj)
 		{
 			var tw = new StringWriter ();
@@ -115,7 +144,8 @@ namespace Tests
 
 		JObject SerializeAsJson (HalJsonConfiguration config, object obj)
 		{
-			return JObject.Parse (Serialize (config, obj));
+		    var data = Serialize(config, obj);
+			return JObject.Parse (data);
 		}
     }
 }

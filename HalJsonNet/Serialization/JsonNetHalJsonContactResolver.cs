@@ -38,10 +38,7 @@ namespace HalJsonNet.Serialization
 					prop.Readable = false;
 				lst.Add(prop);
 			}
-			lst = lst.OrderBy(p => p.Order ?? -1).ToList();
-
-
-            
+			
 			if (config.Embedded.Count != 0 || typeof(IHaveHalJsonEmbedded).IsAssignableFrom(type))
 			{
 				var property = new JsonProperty
@@ -51,7 +48,8 @@ namespace HalJsonNet.Serialization
 					Writable = false,
 					Readable = true,
 					ValueProvider = new EmbeddedValueProvider(config.Embedded),
-					PropertyName = "_embedded"
+					PropertyName = "_embedded",
+                    Order = _configuration.HalJsonPropertiesOrder
 				};
 				lst.Insert(0, property);
 			}
@@ -64,11 +62,13 @@ namespace HalJsonNet.Serialization
 					Writable = false,
 					Readable = true,
 					ValueProvider = new LinksValueProvider(config.Links, _configuration),
-					PropertyName = "_links"
+					PropertyName = "_links",
+                    Order = _configuration.HalJsonPropertiesOrder
 				});
 
-			}
-
+			
+            }
+            lst = lst.OrderBy(p => p.Order ?? -1).ToList();
 			return lst;
 		}
 
